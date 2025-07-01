@@ -1,0 +1,28 @@
+services:
+  # Spring Boot 애플리케이션 서비스
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      # application.yml에서 dev 프로필을 활성화하도록 설정
+      - SPRING_PROFILES_ACTIVE=dev
+      # application-dev.yml에서 사용할 데이터베이스 비밀번호를 설정
+      - DB_PASSWORD=your_secure_password
+    depends_on:
+      - db
+
+  # MySQL 데이터베이스 서비스
+  db:
+    image: mysql:8.0
+    ports:
+      # 로컬 PC의 3308 포트와 컨테이너의 3306 포트를 연결
+      - "3308:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=your_secure_password # <--- 이 부분도 동일하게 변경
+      - MYSQL_DATABASE=boilerplate_db # db 이름은 원하는걸로 지정
+    volumes:
+      - db-data:/var/lib/mysql
+
+volumes:
+  db-data:
